@@ -1,7 +1,7 @@
 {
-  "name": "node-js-getting-started",
+  "name": "wechat",
   "version": "1.0.0",
-  "description": "A sample Node.js app using Express 4",
+  "description": "a weChat official account push server",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,7 +11,9 @@
     "node",
     "LeanCloud",
     "LeanEngine",
-    "express"
+    "express",
+    "微信",
+    "wechat"
   ],
   "license": "MIT",
   "dependencies": {
