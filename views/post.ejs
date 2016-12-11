@@ -8,12 +8,15 @@
     <meta name="referrer" content="always">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
     <meta name="author" content="bukas">
-    <title>Error</title>
+    <title><%= title %></title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <h1><%= message %></h1>
-    <h2><%= error.status %></h2>
-    <pre><%= error.stack %></pre>
+    <h1><%= title %></h1>
+    <ol>
+        <% posts.forEach(function (post) {
+            <li><a href="<%= post.url %>" target="_blank"><%= post.title %></a></li>
+        <% }); %>
+    </ol>
 </body>
 </html>
