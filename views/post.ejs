@@ -14,7 +14,7 @@
 <body>
     <h1><%= title %></h1>
     <ol>
-        <% posts.forEach(function (post) { %>
+        <% posts.forEach(function (i, post) { %>
             <li><a href="<%= post.url %>" target="_blank"><%= post.title %></a></li>
         <% }); %>
     </ol>

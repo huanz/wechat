@@ -1,5 +1,6 @@
 'use strict';
 var wechat = require('wechat');
+var Post = require('../models/post');
 var parser = require('../utils/parser');
 var config = {
     token: 'wechat',

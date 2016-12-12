@@ -31,20 +31,25 @@ var parserHtml = function (html, options) {
         result.html = $.html();
 
         if (opts.thumb) {
-            async.some($('img').toArray(), function (element, callback) {
-                var src = url.resolve(opts.url, $(element).attr('src'));
-                probe(src).then(function (image) {
-                    if (image.width >= 300 && image.height >= 300) {
-                        result.thumb = src;
-                        callback(null);
-                    }
-                });
-            }, function (err) {
-                resolve(result);
-            });
-        } else {
-            resolve(result);
+            result.thumb = url.resolve(opts.url, $('img').eq(0).attr('src'));
         }
+        resolve(result);
+
+        // if (opts.thumb) {
+        //     async.some($('img').toArray(), function (element, callback) {
+        //         var src = url.resolve(opts.url, $(element).attr('src'));
+        //         probe(src).then(function (image) {
+        //             if (image.width >= 300 && image.height >= 300) {
+        //                 result.thumb = src;
+        //                 callback(null);
+        //             }
+        //         });
+        //     }, function (err) {
+        //         resolve(result);
+        //     });
+        // } else {
+        //     resolve(result);
+        // }
     });
 };
 
