@@ -16,7 +16,7 @@ router.get('/', function (req, res, next) {
         if (err.code === 101) {
             res.render('post', {
                 title: '文章列表',
-                post: results
+                posts: results
             });
         } else {
             next(err);
