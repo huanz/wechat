@@ -3,7 +3,6 @@ var router = require('express').Router();
 
 var Post = require('../models/post');
 
-var fetch = require('../utils/fetch');
 var parser = require('../utils/parser');
 
 router.get('/', function (req, res, next) {
@@ -25,24 +24,21 @@ router.get('/', function (req, res, next) {
 }).post('/', function (req, res, next) {
     var url = req.body.url;
     if (url) {
-        fetch(url).then(function (html) {
-            var title = req.body.title;
-            var thumb = req.body.thumb;
-            var description = req.body.description;
-            parser(html, {
-                title: !title,
-                thumb: !thumb,
-                description: !description,
-                url: url
-            }).then(function (result) {
-                result.title = title || result.title;
-                result.thumb = thumb || result.thumb;
-                result.description = description || result.description;
-                result.url = url;
-                Post.insert(result).then(function (article) {
-                    res.redirect('/post');
-                }).catch(next);
-            });
+        var title = req.body.title;
+        var thumb = req.body.thumb;
+        var description = req.body.description;
+        parser.url(url, {
+            title: !title,
+            thumb: !thumb,
+            description: !description
+        }).then(function (result) {
+            result.title = title || result.title;
+            result.thumb = thumb || result.thumb;
+            result.description = description || result.description;
+            result.url = url;
+            Post.insert(result).then(function (article) {
+                res.redirect('/post');
+            }).catch(next);
         });
     } else {
         res.redirect('/post/recommend');
