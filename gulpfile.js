@@ -45,7 +45,7 @@ gulp.task('node', function () {
     return nodemon({
         verbose: true,
         script: 'server.js',
-        ignore: ['views/*', 'public/*']
+        ignore: ['public/*']
     });
 });
 

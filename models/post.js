@@ -4,6 +4,8 @@
 var AV = require('leanengine');
 var Post = AV.Object.extend('Post');
 
+var utils = require('../utils/utils');
+
 /**
  * 插入一篇文章
  * 
@@ -28,7 +30,9 @@ exports.insert = function (data) {
  * @returns {Promise}
  */
 exports.list = function () {
-    var query = new AV.Query(Post);
+    var query = new AV.Query('Post');
     query.descending('createdAt');
-    return query.find();
+    return query.find().then(function (results) {
+        return utils.pluck(results, 'attributes', true);
+    });
 };

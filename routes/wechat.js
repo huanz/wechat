@@ -2,14 +2,9 @@
 var wechat = require('wechat');
 var Post = require('../models/post');
 var parser = require('../utils/parser');
-var config = {
-    token: 'wechat',
-    appid: 'wx950185c910864189',
-    encodingAESKey: 'jvpVKAptdSpjLxoY5mXXhdDdt3SHsO4gYSmCt6iFlwb'
-};
 var urlParttern = /^https?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
 
-module.exports = wechat(config).text(function (message, req, res, next) {
+module.exports = wechat(Config.wechat).text(function (message, req, res, next) {
     var input = (message.Content || '').trim();
     if (urlParttern.test(input)) {
         parser.url(input).then(function (result) {

@@ -11,6 +11,15 @@ var wechat = require('./routes/wechat');
 
 var app = express();
 
+global.Config = {
+    wechat: {
+        token: process.env.WX_TOKEN,
+        appid: process.env.WX_APPID,
+        encodingAESKey: process.env.WX_AESKEY,
+        appsecret: process.env.WX_APPSECRET
+    }
+};
+
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

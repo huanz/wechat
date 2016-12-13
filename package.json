@@ -25,9 +25,11 @@
     "ejs": "2.3.1",
     "express": "4.12.3",
     "leanengine": "^1.0.0-beta",
+    "node-schedule": "^1.2.0",
     "probe-image-size": "^3.0.0",
     "request": "^2.79.0",
-    "wechat": "^2.0.3"
+    "wechat": "^2.0.3",
+    "wechat-api": "^1.32.0"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

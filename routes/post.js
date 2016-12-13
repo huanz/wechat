@@ -11,15 +11,6 @@ router.get('/', function (req, res, next) {
             title: '文章列表',
             posts: results
         });
-    }, function (err) {
-        if (err.code === 101) {
-            res.render('post', {
-                title: '文章列表',
-                posts: results
-            });
-        } else {
-            next(err);
-        }
     }).catch(next);
 }).post('/', function (req, res, next) {
     var url = req.body.url;
