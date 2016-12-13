@@ -14,7 +14,7 @@ module.exports = wechat(config).text(function (message, req, res, next) {
     if (urlParttern.test(input)) {
         parser.url(input).then(function (result) {
             result.url = input;
-            result.weixin = JSON.stringify(message);
+            result.weixin = message;
             Post.insert(result).then(function (article) {
                 res.reply([{
                     title: result.title,

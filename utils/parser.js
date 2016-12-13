@@ -31,7 +31,14 @@ var parserHtml = function (html, options) {
         result.html = $.html();
 
         if (opts.thumb) {
-            result.thumb = url.resolve(opts.url, $('img').eq(0).attr('src'));
+            $('img').each(function () {
+                var src = $(this).attr('src') || $(this).attr('data-src');
+                if (src) {
+                    result.thumb = url.resolve(opts.url, src);
+                    return false;
+                }
+            });
+            
         }
         resolve(result);
 
