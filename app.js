@@ -6,11 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var AV = require('leanengine');
 
-var post = require('./routes/post');
-var wechat = require('./routes/wechat');
-
-var app = express();
-
 global.Config = {
     wechat: {
         token: process.env.WX_TOKEN,
@@ -19,6 +14,11 @@ global.Config = {
         appsecret: process.env.WX_APPSECRET
     }
 };
+
+var post = require('./routes/post');
+var wechat = require('./routes/wechat');
+
+var app = express();
 
 // 设置模板引擎
 app.set('views', path.join(__dirname, 'views'));
