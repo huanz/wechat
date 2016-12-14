@@ -1,0 +1,4 @@
+{% macro input(label, name, value='', type='text') %}
+<label for="{{ name }}">{{ label }}</label>
+<input type="{{ type }}" name="{{ name }}" id="{{ name }}" value="{{ value }}" placeholder="请输入{{ label }}">
+{% endmacro %}

@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>{{ title }}</h1>
+    <form action="/post/" method="POST">
+        <fieldset>
+            {% import "macro/input.html" as form %}
+            {{ form.input('链接', 'url', '', 'url') }}
+            {{ form.input('标题', 'title') }}
+            {{ form.input('描述', 'description') }}
+            {{ form.input('图片', 'thumb', '', 'url') }}
+            <input class="button-primary" type="submit" value="分享">
+        </fieldset>
+    </form>
+{% endblock %}

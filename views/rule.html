@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>添加规则</h1>
+    <form action="/rule/" method="POST">
+        <fieldset>
+            {% import "macro/input.html" as form %}
+            {{ form.input('Host', 'host') }}
+            {{ form.input('Path', 'path') }}
+            {{ form.input('标题', 'title') }}
+            {{ form.input('图片', 'thumb') }}
+            {{ form.input('描述', 'description') }}
+            <input class="button-primary" type="submit" value="添加">
+        </fieldset>
+    </form>
+{% endblock %}

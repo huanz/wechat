@@ -32,11 +32,11 @@ router.get('/', function (req, res, next) {
             }).catch(next);
         });
     } else {
-        res.redirect('/post/recommend');
+        res.redirect('/post/share');
     }
-}).get('/recommend', function (req, res, next) {
-    res.render('recommend', {
-        title: '推荐文章'
+}).get('/share', function (req, res, next) {
+    res.render('share', {
+        title: '分享文章'
     });
 });
 

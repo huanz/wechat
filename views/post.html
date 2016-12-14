@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>{{title}}</h1>
+    <ol>
+        {% for post in posts %}
+            <li><a href="{{ post.url }}" target="_blank">{{ post.title }}</a></li>
+        {% endfor %}
+    </ol>
+{% endblock %}
