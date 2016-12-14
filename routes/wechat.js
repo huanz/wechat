@@ -17,9 +17,13 @@ module.exports = wechat(Config.wechat).text(function (message, req, res, next) {
                     picurl: result.thumb,
                     url: input
                 }]);
-            }).catch(next);
-        }).catch(next);
+            }).catch(function () {
+                res.reply('出错啦，木有推荐成功啊');
+            });
+        }).catch(function () {
+            res.reply('出错啦，木有推荐成功啊');
+        });
     } else {
-        next();
+        res.reply('直接发送文章链接即可推荐文章给我哦~~~');
     }
 }).middlewarify();

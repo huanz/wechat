@@ -39,6 +39,6 @@
     "gulp-sass": "^3.0.0"
   },
   "engines": {
-    "node": "4.x"
+    "node": "7.x"
   }
 }
