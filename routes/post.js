@@ -1,9 +1,9 @@
 'use strict';
-var router = require('express').Router();
+const router = require('express').Router();
 
-var Post = require('../models/post');
+const Post = require('../models/post');
 
-var parser = require('../utils/parser');
+const parser = require('../utils/parser');
 
 router.get('/', function (req, res, next) {
     Post.list().then(function (results) {
@@ -13,11 +13,11 @@ router.get('/', function (req, res, next) {
         });
     }).catch(next);
 }).post('/', function (req, res, next) {
-    var url = req.body.url;
+    let url = req.body.url;
     if (url) {
-        var title = req.body.title;
-        var thumb = req.body.thumb;
-        var description = req.body.description;
+        let title = req.body.title;
+        let thumb = req.body.thumb;
+        let description = req.body.description;
         parser.url(url, {
             title: !title,
             thumb: !thumb,

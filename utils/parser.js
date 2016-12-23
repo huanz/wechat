@@ -1,11 +1,11 @@
-var url = require('url');
-var cheerio = require('cheerio');
-var fetch = require('./fetch');
+const url = require('url');
+const cheerio = require('cheerio');
+const fetch = require('./fetch');
 
-var parserHtml = function (html, options) {
-    var result = {};
-    var $ = cheerio.load(html);
-    var opts = Object.assign({
+const parserHtml = function (html, options) {
+    let result = {};
+    let $ = cheerio.load(html);
+    let opts = Object.assign({
         title: true,
         thumb: true,
         description: true
@@ -36,9 +36,9 @@ var parserHtml = function (html, options) {
     return result;
 };
 
-var parserUrl = function (link, options) {
+const parserUrl = function (link, options) {
     return fetch(link).then(function (res) {
-        var value = res.headers['content-type'];
+        let value = res.headers['content-type'];
         if (value.indexOf('text/html') > -1) {
             options = options || {};
             options.url = link;

@@ -1,12 +1,12 @@
 'use strict';
-var router = require('express').Router();
+const router = require('express').Router();
 
-var Rule = require('../models/rule');
+const Rule = require('../models/rule');
 
 router.get('/', (req, res, next) => {
     res.render('rule');
 }).post('/', (req, res, next) => {
-    Rule.insert(res.body).then(function () {
+    Rule.insert(req.body).then(function () {
         res.redirect('/post/share');
     }).catch(next);
 });
