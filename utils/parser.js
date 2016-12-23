@@ -37,12 +37,19 @@ const parserHtml = function (html, options) {
 };
 
 const parserUrl = function (link, options) {
-    return fetch(link).then(function (res) {
+    return getHtml(link).then(function (html) {
+        let value = res.headers['content-type'];
+        options = options || {};
+        options.url = link;
+        return parserHtml(html, options);
+    });
+};
+
+const getHtml = link => {
+    return fetch(link).then(res => {
         let value = res.headers['content-type'];
         if (value.indexOf('text/html') > -1) {
-            options = options || {};
-            options.url = link;
-            return parserHtml(res.body, options);
+            return res.body;
         } else {
             return Promise.reject('response not html');
         }
@@ -51,3 +58,4 @@ const parserUrl = function (link, options) {
 
 exports.html = parserHtml;
 exports.url = parserUrl;
+exports.get = getHtml;
