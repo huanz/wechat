@@ -13,7 +13,7 @@ module.exports = wechat(Config.wechat).text((message, req, res, next) => {
             res.reply('出错啦，木有推荐成功啊');
         };
         Post.getByUrl(input).then(p => {
-            if (p) {
+            if (p && p.status) {
                 res.reply([{
                     title: p.title,
                     description: p.description,
@@ -39,22 +39,25 @@ module.exports = wechat(Config.wechat).text((message, req, res, next) => {
                             });
                         }
                         Object.assign(result, {
+                            status: 1,
                             title: eval(curRule.title),
                             html: eval(curRule.html),
                             thumb: eval(curRule.thumb),
                             description: (curRule.description && eval(curRule.description)) || ''
                         });
-                    } else {
+                    } else if (!p) {
                         Object.assign(result, parser.html(results[0]));
                     }
-                    Post.insert(result).then(() => {
-                        res.reply([{
-                            title: result.title,
-                            description: result.description,
-                            picurl: result.thumb,
-                            url: input
-                        }]);
-                    }).catch(error);
+                    if (!p || !p.status) {
+                        Post.insert(result).then(() => {
+                            res.reply([{
+                                title: result.title,
+                                description: result.description,
+                                picurl: result.thumb,
+                                url: input
+                            }]);
+                        }).catch(error);
+                    }
                 }).catch(error);
             }
         }).catch(error);
