@@ -6,7 +6,7 @@ const Rule = require('../models/rule');
 router.get('/', (req, res, next) => {
     res.render('rule');
 }).post('/', (req, res, next) => {
-    Rule.insert(req.body).then(function () {
+    Rule.insert(req.body).then(() => {
         res.redirect('/post/share');
     }).catch(next);
 });

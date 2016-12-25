@@ -6,7 +6,7 @@
  * @param {Boolean} leanCloud 特殊处理
  * @returns {Array} result
  */
-const pluck = function (arr, key, leanCloud) {
+const pluck = (arr, key, leanCloud) => {
     let result = [];
     arr.forEach(item => {
         if (item[key]) {

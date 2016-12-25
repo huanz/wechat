@@ -2,7 +2,7 @@ const url = require('url');
 const cheerio = require('cheerio');
 const fetch = require('./fetch');
 
-const parserHtml = function (html, options) {
+const parserHtml = (html, options) => {
     let result = {};
     let $ = cheerio.load(html);
     let opts = Object.assign({
@@ -25,8 +25,8 @@ const parserHtml = function (html, options) {
     result.html = $.html();
 
     if (opts.thumb) {
-        $('img').each(function () {
-            var src = $(this).attr('src') || $(this).attr('data-src');
+        $('img').each(() => {
+            let src = $(this).attr('src') || $(this).attr('data-src');
             if (src) {
                 result.thumb = url.resolve(opts.url, src);
                 return false;
@@ -36,8 +36,8 @@ const parserHtml = function (html, options) {
     return result;
 };
 
-const parserUrl = function (link, options) {
-    return getHtml(link).then(function (html) {
+const parserUrl = (link, options) => {
+    return getHtml(link).then(html => {
         let value = res.headers['content-type'];
         options = options || {};
         options.url = link;
@@ -45,7 +45,7 @@ const parserUrl = function (link, options) {
     });
 };
 
-const getHtml = link => {
+const getHtml = (link) => {
     return fetch(link).then(res => {
         let value = res.headers['content-type'];
         if (value.indexOf('text/html') > -1) {

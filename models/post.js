@@ -12,7 +12,7 @@ const utils = require('../utils/utils');
  * @param {Object} data
  * @returns {Promise}
  */
-exports.insert = function (data) {
+exports.insert = (data) => {
     let article = new Post();
     Object.keys(data).forEach( key =>  article.set(key, data[key]));
     article.set('view', 0);
@@ -27,8 +27,20 @@ exports.insert = function (data) {
  *
  * @returns {Promise}
  */
-exports.list = function () {
+exports.list = () => {
     var query = new AV.Query('Post');
     query.descending('createdAt');
     return query.find().then(results => utils.pluck(results, 'attributes', true));
+};
+
+exports.getByUrl = (url) => {
+    let query = new AV.Query('Post');
+    query.equalTo('url', url);
+    return query.find().then(r => {
+        if (r && r.length) {
+            return r[0].attributes;
+        } else {
+            return undefined;
+        }
+    });
 };

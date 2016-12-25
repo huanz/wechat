@@ -6,20 +6,47 @@ const Rule = require('../models/rule');
 const parser = require('../utils/parser');
 const urlParttern = /^https?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
 
-module.exports = wechat(Config.wechat).text(function (message, req, res, next) {
+module.exports = wechat(Config.wechat).text((message, req, res, next) => {
     let input = (message.Content || '').trim();
     if (urlParttern.test(input)) {
         let error = () => {
             res.reply('出错啦，木有推荐成功啊');
         };
-        let parsed = url.parse(input);
-        Rule.getByHost(parsed.host).then(r => {
-            if (r) {
-                let curRule = r[0];
+        Post.getByUrl(input).then(p => {
+            if (p) {
+                res.reply([{
+                    title: p.title,
+                    description: p.description,
+                    picurl: p.thumb,
+                    url: input
+                }]);
             } else {
-                parser.url(input).then(result => {
-                    result.url = input;
-                    result.weixin = message;
+                let parsed = url.parse(input);
+                Promise.all([parser.get(input), Rule.getByHost(parsed.host)]).then(results => {
+                    let r = results[1];
+                    let result = {
+                        url: input,
+                        weixin: message
+                    };
+                    if (r && r.length) {
+                        let curRule = r[0];
+                        if (r.length > 1) {
+                            r.some((element) => {
+                                if (element.path && parsed.path.startsWith(element.path)) {
+                                    curRule = element;
+                                    return true;
+                                }
+                            });
+                        }
+                        Object.assign(result, {
+                            title: eval(curRule.title),
+                            html: eval(curRule.html),
+                            thumb: eval(curRule.thumb),
+                            description: (curRule.description && eval(curRule.description)) || ''
+                        });
+                    } else {
+                        Object.assign(result, parser.html(results[0]));
+                    }
                     Post.insert(result).then(() => {
                         res.reply([{
                             title: result.title,
@@ -28,7 +55,7 @@ module.exports = wechat(Config.wechat).text(function (message, req, res, next) {
                             url: input
                         }]);
                     }).catch(error);
-                })
+                }).catch(error);
             }
         }).catch(error);
     } else {

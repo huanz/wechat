@@ -3,7 +3,7 @@
  */
 const schedule = require('node-schedule');
 
-exports.day = function (hour, callback) {
+exports.day = (hour, callback) => {
     let rule = new schedule.RecurrenceRule();
     rule.hour = hour;
     return schedule.scheduleJob(rule, callback);

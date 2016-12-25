@@ -11,7 +11,7 @@ const utils = require('../utils/utils');
  * @param {Object} data
  * @returns {Promise}
  */
-exports.insert = function (data) {
+exports.insert = (data) => {
     let r = new Rule();
     Object.keys(data).forEach(key => r.set(key, data[key]));
     return r.save();
@@ -24,7 +24,7 @@ exports.insert = function (data) {
  * @param {Object} data
  * @returns {Promise}
  */
-exports.update = function (id, data) {
+exports.update = (id, data) => {
     let r = AV.Object.createWithoutData('Rule', id);
     Object.keys(data).forEach(key => r.set(key, data[key]));
     return r.save();
@@ -36,7 +36,7 @@ exports.update = function (id, data) {
  * @param {String} id
  * @returns {Promise}
  */
-exports.getById = function (id) {
+exports.getById = (id) => {
     let query = new AV.Query('Rule');
     return query.get(id);
 };
@@ -47,7 +47,7 @@ exports.getById = function (id) {
  * @param {String} host
  * @returns {Promise}
  */
-exports.getByHost = function (host) {
+exports.getByHost = (host) => {
     let query = new AV.Query('Rule');
     query.equalTo('host', host);
     return query.find().then(r => {

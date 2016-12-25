@@ -5,14 +5,14 @@ const Post = require('../models/post');
 
 const parser = require('../utils/parser');
 
-router.get('/', function (req, res, next) {
-    Post.list().then(function (results) {
+router.get('/', (req, res, next) => {
+    Post.list().then((results) => {
         res.render('post', {
             title: '文章列表',
             posts: results
         });
     }).catch(next);
-}).post('/', function (req, res, next) {
+}).post('/', (req, res, next) => {
     let url = req.body.url;
     if (url) {
         let title = req.body.title;
@@ -22,19 +22,19 @@ router.get('/', function (req, res, next) {
             title: !title,
             thumb: !thumb,
             description: !description
-        }).then(function (result) {
+        }).then((result) => {
             result.title = title || result.title;
             result.thumb = thumb || result.thumb;
             result.description = description || result.description;
             result.url = url;
-            Post.insert(result).then(function (article) {
+            Post.insert(result).then((article) => {
                 res.redirect('/post');
             }).catch(next);
         });
     } else {
         res.redirect('/post/share');
     }
-}).get('/share', function (req, res, next) {
+}).get('/share', (req, res, next) => {
     res.render('share', {
         title: '分享文章'
     });
