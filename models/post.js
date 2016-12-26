@@ -14,7 +14,7 @@ const utils = require('../utils/utils');
  */
 exports.insert = (data) => {
     let article = new Post();
-    Object.keys(data).forEach( key =>  article.set(key, data[key]));
+    Object.keys(data).forEach(key => article.set(key, data[key]));
     article.set('view', 0);
     if (!data.status) {
         article.set('status', 0);

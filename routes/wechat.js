@@ -38,13 +38,7 @@ module.exports = wechat(Config.wechat).text((message, req, res, next) => {
                                 }
                             });
                         }
-                        Object.assign(result, {
-                            status: 1,
-                            title: eval(curRule.title),
-                            html: eval(curRule.html),
-                            thumb: eval(curRule.thumb),
-                            description: (curRule.description && eval(curRule.description)) || ''
-                        });
+                        Object.assign(result, parser.rule(results[0], curRule));
                     } else if (!p) {
                         Object.assign(result, parser.html(results[0]));
                     }

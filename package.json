@@ -27,6 +27,7 @@
     "node-schedule": "^1.2.0",
     "nunjucks": "^3.0.0",
     "request": "^2.79.0",
+    "striptags": "^2.1.1",
     "wechat": "^2.0.3",
     "wechat-api": "^1.32.0"
   },

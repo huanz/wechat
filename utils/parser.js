@@ -1,10 +1,13 @@
 const url = require('url');
 const cheerio = require('cheerio');
+const striptags = require('striptags');
 const fetch = require('./fetch');
 
 const parserHtml = (html, options) => {
     let result = {};
-    let $ = cheerio.load(html);
+    let $ = cheerio.load(html, {
+        decodeEntities: false
+    });
     let opts = Object.assign({
         title: true,
         thumb: true,
@@ -56,6 +59,27 @@ const getHtml = (link) => {
     });
 };
 
+const parserRule = (html, rule) => {
+    let $ = cheerio.load(html, {
+        decodeEntities: false
+    });
+    let result = {
+        status: 1,
+        title: eval(rule.title),
+        html: eval(rule.html),
+        thumb: eval(rule.thumb),
+        description: (rule.description && eval(rule.description)) || ''
+    };
+    if (!result.description) {
+        result.description = striptags(result.html).replace(/\s/g, '').substr(0, 256);
+    }
+    if (result.thumb.startsWith('//')) {
+        result.thumb = 'https:' + result.thumb;
+    }
+    return result;
+};
+
 exports.html = parserHtml;
 exports.url = parserUrl;
+exports.rule = parserRule;
 exports.get = getHtml;
