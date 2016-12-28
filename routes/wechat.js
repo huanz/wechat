@@ -4,7 +4,7 @@ const wechat = require('wechat');
 const Post = require('../models/post');
 const Rule = require('../models/rule');
 const parser = require('../utils/parser');
-const urlParttern = /^https?:\/\/(([a-zA-Z0-9_-])+(\.)?)*(:\d+)?(\/((\.)?(\?)?=?&?[a-zA-Z0-9_-](\?)?)*)*$/i;
+const urlParttern = /^https?:\/\/[^\s\.]+\.\S{2}\S*$/i;
 
 module.exports = wechat(Config.wechat).text((message, req, res, next) => {
     let input = (message.Content || '').trim();
