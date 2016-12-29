@@ -19,6 +19,7 @@ global.Config = {
     }
 };
 
+
 const post = require('./routes/post');
 const wechat = require('./routes/wechat');
 const rule = require('./routes/rule');
@@ -92,6 +93,13 @@ app.use((err, req, res, next) => {
         message: err.message,
         error: error
     });
+});
+
+const schedule = require('./utils/schedule');
+// 定时任务，每周五晚上推送
+schedule.push({
+    dayOfWeek: [5],
+    hour: 21
 });
 
 module.exports = app;

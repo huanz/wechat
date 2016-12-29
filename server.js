@@ -1,8 +1,6 @@
 'use strict';
 const AV = require('leanengine');
 
-const app = require('./app');
-
 AV.init({
     appId: process.env.LEANCLOUD_APP_ID,
     appKey: process.env.LEANCLOUD_APP_KEY,
@@ -13,6 +11,8 @@ AV.init({
 AV.Cloud.useMasterKey();
 
 var PORT = parseInt(process.env.LEANCLOUD_APP_PORT || process.env.PORT || 3000);
+
+const app = require('./app');
 
 app.listen(PORT, () => {
     console.log('Node app is running, port:', PORT);

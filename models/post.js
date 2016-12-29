@@ -44,3 +44,18 @@ exports.getByUrl = (url) => {
         }
     });
 };
+
+/**
+ * @desc 获取本周文章：截止到上周五21：00前文章
+ */
+exports.getWeekPost = (limit) => {
+    let query = new AV.Query('Post');
+    let now = new Date();
+    let lastWeekFriday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() - 2, 21);
+    query.greaterThanOrEqualTo('createdAt', lastWeekFriday);
+    query.exists('thumb');
+    if (limit) {
+        query.limit(limit);
+    }
+    return query.find().then(results => utils.pluck(results, 'attributes'));
+};

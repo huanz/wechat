@@ -3,8 +3,10 @@
  */
 const schedule = require('node-schedule');
 
-exports.day = (hour, callback) => {
+const Mp = require('../models/mp');
+
+exports.push = (options) => {
     let rule = new schedule.RecurrenceRule();
-    rule.hour = hour;
-    return schedule.scheduleJob(rule, callback);
+    Object.assign(rule, options);
+    return schedule.scheduleJob(rule, Mp.push);
 };
