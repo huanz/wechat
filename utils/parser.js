@@ -73,7 +73,7 @@ const parserRule = (html, rule) => {
     if (!result.description) {
         result.description = striptags(result.html).replace(/\s/g, '').substr(0, 256);
     }
-    if (result.thumb.startsWith('//')) {
+    if (result.thumb && result.thumb.startsWith('//')) {
         result.thumb = 'https:' + result.thumb;
     }
     return result;

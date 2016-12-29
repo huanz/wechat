@@ -2,3 +2,8 @@
 <label for="{{ name }}">{{ label }}</label>
 <input type="{{ type }}" name="{{ name }}" id="{{ name }}" value="{{ value }}" placeholder="请输入{{ label }}">
 {% endmacro %}
+
+{% macro holder(label, name, holder, required=true, type='text') %}
+<label for="{{ name }}">{{ label }}</label>
+<input type="{{ type }}" name="{{ name }}" id="{{ name }}" placeholder="{{ holder }}" {% if required %}required{% endif %}>
+{% endmacro %}

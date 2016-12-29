@@ -49,6 +49,7 @@ exports.getById = (id) => {
  */
 exports.getByHost = (host) => {
     let query = new AV.Query('Rule');
+    host = utils.normalizeHost(host);
     query.equalTo('host', host);
     return query.find().then(r => {
         if (r && r.length) {

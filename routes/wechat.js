@@ -9,7 +9,8 @@ const urlParttern = /^https?:\/\/[^\s\.]+\.\S{2}\S*$/i;
 module.exports = wechat(Config.wechat).text((message, req, res, next) => {
     let input = (message.Content || '').trim();
     if (urlParttern.test(input)) {
-        let error = () => {
+        let error = (e) => {
+            console.log(e);
             res.reply('出错啦，木有推荐成功啊');
         };
         Post.getByUrl(input).then(p => {
@@ -32,7 +33,7 @@ module.exports = wechat(Config.wechat).text((message, req, res, next) => {
                         let curRule = r[0];
                         if (r.length > 1) {
                             r.some((element) => {
-                                if (element.path && parsed.path.startsWith(element.path)) {
+                                if (element.path && parsed.path && new RegExp(element.path).test(parsed.path)) {
                                     curRule = element;
                                     return true;
                                 }
