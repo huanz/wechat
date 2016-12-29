@@ -1,13 +1,21 @@
+const fs = require('fs');
+const path = require('path');
+const request = require('request');
 const WechatAPI = require('wechat-api');
 const Post = require('./post');
 
 const Api = new WechatAPI(Config.wechat.appid, Config.wechat.appsecret);
 
-const uploadMedia = (url) => {
+const uploadMedia = (src) => {
     return new Promise((resolve, reject) => {
-        Api.uploadMedia(url, 'image', (err, result) => {
-            err ? reject(err) : resolve(result);
-        });
+        let fileurl = path.join(__dirname, Date.now() + '.jpg');
+        request.get(src).on('response', () => {
+            Api.uploadMedia(fileurl, 'image', (err, result) => {
+                err ? reject(err) : resolve(result);
+            });
+        }).on('error', (err) => {
+            reject(err);
+        }).pipe(fs.createWriteStream(fileurl));
     });
 };
 
