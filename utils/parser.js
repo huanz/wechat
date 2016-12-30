@@ -18,7 +18,7 @@ const parserLink = (html, link) => {
         $(element).each(function () {
             let $this = $(this);
             let attr = elementAttr[element];
-            $this.attr(attr, url.resolve(link, attr));
+            $this.attr(attr, url.resolve(link, $this.attr(attr)));
         });
     });
     return $;
