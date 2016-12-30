@@ -28,8 +28,8 @@ const pluck = (arr, key, leanCloud) => {
  */
 const normalizeHost = (host) => {
     let hostArr = host.split('.');
-    if (hostArr.length === 3 && hostArr[0] === 'www') {
-        host = hostArr[1] + hostArr[2];
+    if (hostArr[0] === 'www') {
+        host = hostArr.slice(1).join('.');
     }
     return host;
 };
