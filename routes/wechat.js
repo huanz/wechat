@@ -39,7 +39,7 @@ module.exports = wechat(Config.wechat).text((message, req, res, next) => {
                                 }
                             });
                         }
-                        Object.assign(result, parser.rule(results[0], curRule));
+                        Object.assign(result, parser.rule(results[0], curRule, input));
                     } else if (!p) {
                         Object.assign(result, parser.html(results[0]));
                     }

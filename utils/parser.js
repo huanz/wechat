@@ -3,6 +3,27 @@ const cheerio = require('cheerio');
 const striptags = require('striptags');
 const fetch = require('./fetch');
 
+/**
+ * @desc 链接路径处理
+ */
+const parserLink = (html, link) => {
+    let $ = html.cheerio ? html : cheerio.load(html, {
+        decodeEntities: false
+    });
+    let elementAttr = {
+        a: 'href',
+        img: 'src'
+    };
+    Object.keys(elementAttr).forEach(element => {
+        $(element).each(function () {
+            let $this = $(this);
+            let attr = elementAttr[element];
+            $this.attr(attr, url.resolve(link, attr));
+        });
+    });
+    return $;
+};
+
 const parserHtml = (html, options) => {
     let result = {};
     let $ = cheerio.load(html, {
@@ -24,6 +45,8 @@ const parserHtml = (html, options) => {
     if (!$('meta[name="viewport"]').length) {
         $('head').append('<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">');
     }
+
+    parserLink($, opts.url);
 
     result.html = $.html();
 
@@ -59,10 +82,8 @@ const getHtml = (link) => {
     });
 };
 
-const parserRule = (html, rule) => {
-    let $ = cheerio.load(html, {
-        decodeEntities: false
-    });
+const parserRule = (html, rule, link) => {
+    let $ = parserLink(html, link);
     let result = {
         status: 1,
         title: eval(rule.title),
