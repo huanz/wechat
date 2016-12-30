@@ -29,3 +29,7 @@ body {
 .pull-right {
     @include float(right);
 }
+
+.post-title {
+    font-size: 4.5rem;
+}

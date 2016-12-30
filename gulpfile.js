@@ -50,6 +50,6 @@ gulp.task('node', function () {
 });
 
 gulp.task('default', function() {
-    gulp.watch(config.sass[0], ['sass']);
+    gulp.watch(config.sass[0], ['build:sass']);
     gulp.start('node');
 });
