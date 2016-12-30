@@ -35,5 +35,11 @@ const normalizeHost = (host) => {
 };
 
 
+const isObjectId = (id) => {
+    return /^[0-9a-fA-F]{24}$/.test((id + '').trim());
+};
+
+
 exports.pluck = pluck;
 exports.normalizeHost = normalizeHost;
+exports.isObjectId = isObjectId;

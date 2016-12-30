@@ -4,6 +4,7 @@ const router = require('express').Router();
 const Post = require('../models/post');
 
 const parser = require('../utils/parser');
+const utils = require('../utils/utils');
 
 router.get('/', (req, res, next) => {
     Post.list().then((results) => {
@@ -12,6 +13,18 @@ router.get('/', (req, res, next) => {
             posts: results
         });
     }).catch(next);
+}).get('/:id', (req, res, next) => {
+    let id = req.params.id.trim();
+    if (utils.isObjectId(id)) {
+        Post.getById(id).then(result => {
+            res.render('show', {
+                title: result.title,
+                post: result
+            });
+        }).catch(next);
+    } else {
+        next();
+    }
 }).post('/', (req, res, next) => {
     let url = req.body.url;
     if (url) {

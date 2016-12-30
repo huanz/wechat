@@ -33,12 +33,21 @@ exports.list = () => {
     return query.find().then(results => utils.pluck(results, 'attributes', true));
 };
 
+exports.getById = (id) => {
+    let query = new AV.Query('Post');
+    return query.get(id).then(result => {
+        if (result) {
+            return result.attributes;
+        }
+    });
+};
+
 exports.getByUrl = (url) => {
     let query = new AV.Query('Post');
     query.equalTo('url', url);
-    return query.find().then(r => {
-        if (r && r.length) {
-            return r[0].attributes;
+    return query.find().then(results => {
+        if (results && results.length) {
+            return results[0].attributes;
         } else {
             return undefined;
         }
