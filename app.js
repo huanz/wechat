@@ -13,9 +13,9 @@ const app = express();
 global.Config = {
     wechat: {
         token: process.env.WX_TOKEN,
-        appid: process.env.WX_APPID,
+        appid: process.env.WX_APPID_TEST,
         encodingAESKey: process.env.WX_AESKEY,
-        appsecret: process.env.WX_APPSECRET
+        appsecret: process.env.WX_APPSECRET_TEST
     }
 };
 

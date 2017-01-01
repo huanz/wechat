@@ -6,6 +6,7 @@ const schedule = require('node-schedule');
 const Mp = require('../models/mp');
 
 exports.push = (options) => {
+    Mp.push();
     let rule = new schedule.RecurrenceRule();
     Object.assign(rule, options);
     return schedule.scheduleJob(rule, Mp.push);
