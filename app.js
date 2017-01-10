@@ -95,11 +95,11 @@ app.use((err, req, res, next) => {
     });
 });
 
-const schedule = require('./utils/schedule');
-// 定时任务，每周五晚上推送
-schedule.push({
-    dayOfWeek: [5],
-    hour: 21
-});
+// const schedule = require('./utils/schedule');
+// // 定时任务，每周五晚上推送
+// schedule.push({
+//     dayOfWeek: [5],
+//     hour: 21
+// });
 
 module.exports = app;

@@ -89,9 +89,13 @@ const parserRule = (html, rule, link) => {
         status: 1,
         title: eval(rule.title),
         html: eval(rule.html),
-        thumb: eval(rule.thumb),
         description: (rule.description && eval(rule.description)) || ''
     };
+    try {
+        result.thumb = eval(rule.thumb);
+    } catch (error) {
+        console.log(error, rule.thumb);
+    }
     if (!result.description) {
         result.description = striptags(result.html).replace(/\s/g, '').substr(0, 256);
     }
