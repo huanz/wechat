@@ -7,7 +7,8 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
 const AV = require('leanengine');
-
+// 加载云函数定义
+require('./cloud');
 const app = express();
 
 global.Config = {
@@ -16,13 +17,17 @@ global.Config = {
         appid: process.env.WX_APPID,
         encodingAESKey: process.env.WX_AESKEY,
         appsecret: process.env.WX_APPSECRET
+    },
+    mp: {
+        username: process.env.MP_USER,
+        password: process.env.MP_PASS
     }
 };
-
 
 const post = require('./routes/post');
 const wechat = require('./routes/wechat');
 const rule = require('./routes/rule');
+const api = require('./routes/api');
 
 const env = process.env.NODE_ENV || 'development';
 const logstyle = env === 'production' ? 'combined' : 'dev';
@@ -38,8 +43,6 @@ app.set('view engine', 'html');
 app.use(express.static('public'));
 // 设置默认超时时间
 app.use(timeout('15s'));
-// 加载云函数定义
-require('./cloud');
 // 加载云引擎中间件
 app.use(AV.express());
 
@@ -59,6 +62,7 @@ app.get('/', (req, res) => {
 app.use('/post', post);
 app.use('/wechat', wechat);
 app.use('/rule', rule);
+app.use('/api', api);
 
 app.use((req, res, next) => {
     if (!res.headersSent) {

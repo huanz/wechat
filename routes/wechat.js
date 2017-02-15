@@ -4,11 +4,14 @@ const wechat = require('wechat');
 const Post = require('../models/post');
 const Rule = require('../models/rule');
 const parser = require('../utils/parser');
+const mp = require('../utils/mp');
 const urlParttern = /^https?:\/\/[^\s\.]+\.\S{2}\S*$/i;
 
 module.exports = wechat(Config.wechat).text((message, req, res, next) => {
     let input = (message.Content || '').trim();
-    if (urlParttern.test(input)) {
+    if (input === '推送') {
+        mp.push(res);
+    } else if (urlParttern.test(input)) {
         let error = (e) => {
             console.log(e);
             res.reply('出错啦，木有推荐成功啊');

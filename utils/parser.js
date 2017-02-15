@@ -1,6 +1,7 @@
 const url = require('url');
 const cheerio = require('cheerio');
 const striptags = require('striptags');
+const toMarkdown = require('to-markdown');
 const fetch = require('./fetch');
 
 /**
@@ -105,7 +106,24 @@ const parserRule = (html, rule, link) => {
     return result;
 };
 
+/**
+ * @desc html转markdown
+ */
+const html2md = (html) => {
+    return toMarkdown(html, {
+        gfm: true,
+        converters: [{
+            filter: ['div', 'nav', 'section', 'article', 'aside', 'footer', 'header', 'menu', 'main'],
+            replacement: content => `\n\n${content}\n\n`
+        }, {
+            filter: 'span',
+            replacement: content => content
+        }]
+    });
+};
+
 exports.html = parserHtml;
 exports.url = parserUrl;
 exports.rule = parserRule;
 exports.get = getHtml;
+exports.html2md = html2md;

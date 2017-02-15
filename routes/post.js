@@ -40,6 +40,7 @@ router.get('/', (req, res, next) => {
             result.thumb = thumb || result.thumb;
             result.description = description || result.description;
             result.url = url;
+            result.md = parser.html2md(result.html);
             Post.insert(result).then((article) => {
                 res.redirect('/post');
             }).catch(next);
