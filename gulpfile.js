@@ -45,7 +45,10 @@ gulp.task('node', function () {
     return nodemon({
         verbose: true,
         script: 'server.js',
-        ignore: ['public/*']
+        ignore: ['public/*'],
+        execMap: {
+            js: 'node --harmony-async-await'
+        }
     });
 });
 
