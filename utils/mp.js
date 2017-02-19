@@ -10,8 +10,15 @@ const Post = require('../models/post');
 const API = new Wechat(Config.mp.username, Config.mp.password);
 
 exports.push = async (res) => {
+    let replyEd = false;
+    let replyId = '';
     let reply = (msg) => {
-        res.reply(msg);
+        if (replyEd) {
+            API.singlesend('osl8HwPBTCsVbquNsnYbUfOQH8sM', msg, replyId);
+        } else {
+            res.reply(msg);
+            replyEd = true;
+        }
     };
     API.once('scan.login', (filepath) => {
         // 登录二维码图片地址
@@ -25,8 +32,12 @@ exports.push = async (res) => {
 
     try {
         let results = await Promise.all([Post.getWeekPost(8), API.login()]);
-        let appMsgId = await API.operate_appmsg(results[0]);
-        let ok = await API.masssend(appMsgId);
+        let results2 = await Promise.all([API.operate_appmsg(results[0]), API.message(1)]);
+
+        replyId = results2[1][0].id;
+
+        let ok = await API.masssend(results2[0]);
+
         reply('群发成功');
     } catch (e) {
         reply(e);
