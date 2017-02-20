@@ -9,12 +9,12 @@ const Post = require('../models/post');
 
 const API = new Wechat(Config.mp.username, Config.mp.password);
 
-exports.push = async (res) => {
+exports.push = async (res, userId) => {
     let replyEd = false;
     let replyId = '';
     let reply = (msg) => {
         if (replyEd) {
-            API.singlesend('osl8HwPBTCsVbquNsnYbUfOQH8sM', msg, replyId);
+            API.singlesend(userId, msg, replyId);
         } else {
             res.reply(msg);
             replyEd = true;

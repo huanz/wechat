@@ -9,8 +9,8 @@ const urlParttern = /^https?:\/\/[^\s\.]+\.\S{2}\S*$/i;
 
 module.exports = wechat(Config.wechat).text((message, req, res, next) => {
     let input = (message.Content || '').trim();
-    if (input === '推送') {
-        mp.push(res);
+    if (input === '推送' && message.FromUserName === 'osl8HwPBTCsVbquNsnYbUfOQH8sM') {
+        mp.push(res, message.FromUserName);
     } else if (urlParttern.test(input)) {
         let error = (e) => {
             console.log(e);
