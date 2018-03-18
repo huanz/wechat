@@ -1,8 +1,12 @@
 const url = require('url');
 const cheerio = require('cheerio');
 const striptags = require('striptags');
-const toMarkdown = require('to-markdown');
+const turndown = require('turndown');
+const turndownPluginGfm = require('turndown-plugin-gfm');
 const fetch = require('./fetch');
+
+const turndownService = new turndown();
+turndownService.use(turndownPluginGfm.gfm);
 
 /**
  * @desc 链接路径处理
@@ -110,16 +114,7 @@ const parserRule = (html, rule, link) => {
  * @desc html转markdown
  */
 const html2md = (html) => {
-    return toMarkdown(html, {
-        gfm: true,
-        converters: [{
-            filter: ['div', 'nav', 'section', 'article', 'aside', 'footer', 'header', 'menu', 'main'],
-            replacement: content => `\n\n${content}\n\n`
-        }, {
-            filter: 'span',
-            replacement: content => content
-        }]
-    });
+    return turndownService.turndown(html);
 };
 
 exports.html = parserHtml;
