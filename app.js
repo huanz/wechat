@@ -33,7 +33,7 @@ const logstyle = env === 'production' ? 'combined' : 'dev';
 app.use(morgan(logstyle));
 // nunjucks配置
 nunjucks.configure('views', {
-    autoescape: false,
+    autoescape: true,
     express: app
 }).addGlobal('title', 'FE');
 app.engine('html', nunjucks.render);
