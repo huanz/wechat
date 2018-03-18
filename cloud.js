@@ -6,3 +6,5 @@ const AV = require('leanengine');
 AV.Cloud.define('push', function (request, response) {
     response.success('Hello world!');
 });
+
+module.exports = AV.Cloud;

@@ -2,7 +2,6 @@
 const path = require('path');
 const express = require('express');
 const timeout = require('connect-timeout');
-const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
@@ -46,12 +45,17 @@ app.use(timeout('15s'));
 // 加载云引擎中间件
 app.use(AV.express());
 
+// 强制使用 https
+app.enable('trust proxy');
+app.use(AV.Cloud.HttpsRedirect());
+
+// 加载 cookieSession 以支持 AV.User 的会话状态
+app.use(AV.Cloud.CookieSession({ secret: 'randomString', maxAge: 3600000, fetchUser: true }));
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
-app.use(cookieParser());
-app.use(express.query());
 
 app.get('/', (req, res) => {
     res.render('index', {
