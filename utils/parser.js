@@ -96,6 +96,9 @@ const parserRule = (html, rule, link) => {
         html: eval(rule.html),
         description: (rule.description && eval(rule.description)) || ''
     };
+    if (result.title) {
+        result.title = result.title.trim();
+    }
     try {
         result.thumb = eval(rule.thumb);
     } catch (error) {
