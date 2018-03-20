@@ -8,6 +8,10 @@ const fetch = require('./fetch');
 const turndownService = new turndown();
 turndownService.use(turndownPluginGfm.gfm);
 
+const imgSource = (el) => {
+    return $(el).attr('src') || $(el).attr('data-src');
+};
+
 /**
  * @desc 链接路径处理
  */
@@ -23,7 +27,7 @@ const parserLink = (html, link) => {
         $(element).each(function () {
             let $this = $(this);
             let attr = elementAttr[element];
-            let value = $this.attr(attr);
+            let value = element === 'img' ? imgSource($this) : $this.attr(attr);
             value && $this.attr(attr, url.resolve(link, value));
         });
     });
@@ -70,7 +74,6 @@ const parserHtml = (html, options) => {
 
 const parserUrl = (link, options) => {
     return getHtml(link).then(html => {
-        let value = res.headers['content-type'];
         options = options || {};
         options.url = link;
         return parserHtml(html, options);
