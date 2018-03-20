@@ -33,16 +33,11 @@ const parserLink = (html, link) => {
                 $this.attr(attr, url.resolve(link, value));
                 if (element === 'iframe') {
                     let urlParams = new url.URLSearchParams(value);
-                    let width = '100%';
-                    let height = 'auto';
-                    if (urlParams.get('width')) {
-                        width = `${urlParams.get('width')}px`;
-                    }
-                    if (urlParams.get('height')) {
-                        height = `${urlParams.get('height')}px`;
-                    }
-                    $this.attr('style', `dispaly:block;max-width:100%;width:${width};height:${height}`);
-                    
+                    let width = urlParams.get('width') || '100%';
+                    let height = urlParams.get('height') || 'auto';
+                    $this.attr('style', 'dispaly:block;max-width:100%;');
+                    $this.attr('width', width);
+                    $this.attr('height', height);
                 }
             }
         });
