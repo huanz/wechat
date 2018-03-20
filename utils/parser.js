@@ -29,7 +29,12 @@ const parserLink = (html, link) => {
             let $this = $(this);
             let attr = elementAttr[element];
             let value = attr === 'src' ? imgSource($this) : $this.attr(attr);
-            value && $this.attr(attr, url.resolve(link, value));
+            if (value) {
+                $this.attr(attr, url.resolve(link, value));
+                if (element === 'iframe') {
+                    $this.attr('onload', 'this.style.height=this.contentDocument.body.scrollHeight +"px";this.style.width=this.contentDocument.body.scrollWidth +"px";');
+                }
+            }
         });
     });
     return $;
