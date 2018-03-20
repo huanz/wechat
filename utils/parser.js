@@ -62,7 +62,7 @@ const parserHtml = (html, options) => {
 
     if (opts.thumb) {
         $('img').each(() => {
-            let src = $(this).attr('src') || $(this).attr('data-src');
+            let src = imgSource($(this));
             if (src) {
                 result.thumb = url.resolve(opts.url, src);
                 return false;
