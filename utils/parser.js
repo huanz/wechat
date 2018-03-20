@@ -32,8 +32,8 @@ const parserLink = (html, link) => {
             if (value) {
                 $this.attr(attr, url.resolve(link, value));
                 if (element === 'iframe') {
-                    $this.attr('style', 'max-width: 100%;height:auto');
-                    $this.attr('onload', 'this.style.height=this.contentDocument.body.scrollHeight +"px";this.style.width=this.contentDocument.body.scrollWidth +"px";');
+                    $this.attr('style', 'dispaly:block;max-width: 100%;height:auto');
+                    $this.attr('onload', 'this.style.height=this.contentDocument.body.scrollHeight +\'px\';this.style.width=this.contentDocument.body.scrollWidth +\'px\';');
                 }
             }
         });
