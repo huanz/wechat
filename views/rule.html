@@ -4,7 +4,7 @@
     <form action="/rule/" method="POST">
         <fieldset>
             {% import "macro/input.html" as form %}
-            {{ form.holder("Host", "host", "请输入域名（不带www），如：w3cboy.com") }}
+            {{ form.holder("Host", "host", "请输入域名（不带www），如：noonme.com") }}
             {{ form.holder("Path", "path", "请输入解析匹配路径正则，如：^/post/，可为空", false) }}
             {{ form.holder("标题", "title", "请输入标题解析规则（cheerio，jquery语法），如：$('h1').text().trim()") }}
             {{ form.holder("图片", "thumb", "请输入图片解析规则，如：$('.content img').eq(0).attr('src')") }}
