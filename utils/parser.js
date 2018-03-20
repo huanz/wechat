@@ -21,13 +21,14 @@ const parserLink = (html, link) => {
     });
     let elementAttr = {
         a: 'href',
-        img: 'src'
+        img: 'src',
+        iframe: 'src'
     };
     Object.keys(elementAttr).forEach(element => {
         $(element).each(function () {
             let $this = $(this);
             let attr = elementAttr[element];
-            let value = element === 'img' ? imgSource($this) : $this.attr(attr);
+            let value = attr === 'src' ? imgSource($this) : $this.attr(attr);
             value && $this.attr(attr, url.resolve(link, value));
         });
     });
