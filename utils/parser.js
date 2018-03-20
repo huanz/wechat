@@ -8,8 +8,8 @@ const fetch = require('./fetch');
 const turndownService = new turndown();
 turndownService.use(turndownPluginGfm.gfm);
 
-const imgSource = (el) => {
-    return $(el).attr('src') || $(el).attr('data-src');
+const imgSource = ($el) => {
+    return $el.attr('src') || $el.attr('data-src');
 };
 
 /**
