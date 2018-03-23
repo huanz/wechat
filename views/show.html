@@ -1,5 +1,5 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1 class="post-title">{{ post.title }}</h1>
+    <h1 class="post-title">{{ post.title }} <a href="{{post.url}}" target="_blank" rel="noopener">原文链接</a></h1>
     <article>{{ post.html | safe }}</article>
 {% endblock %}
