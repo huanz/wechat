@@ -59,9 +59,8 @@ exports.getByUrl = (url) => {
  */
 exports.getWeekPost = (limit) => {
     let query = new AV.Query('Post');
-    let now = new Date();
-    let lastWeekFriday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay() - 2, 21);
-    query.greaterThanOrEqualTo('createdAt', lastWeekFriday);
+    let lastWeek = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    query.greaterThanOrEqualTo('createdAt', lastWeek);
     query.exists('thumb');
     if (limit) {
         query.limit(limit);
