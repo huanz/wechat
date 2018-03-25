@@ -41,6 +41,7 @@ exports.push = async (res, userId) => {
 
         reply('群发成功');
     } catch (e) {
+        console.log(e);
         reply(e);
     }
 };
