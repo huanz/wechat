@@ -32,7 +32,6 @@ exports.push = async (res, userId) => {
 
     try {
         let results = await Promise.all([Post.getWeekPost(8), API.login()]);
-        console.log(results[0]);
         let results2 = await Promise.all([API.operate_appmsg(results[0]), API.message(1)]);
 
         replyId = results2[1][0].id;
