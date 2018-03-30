@@ -11,7 +11,7 @@ const Post = require('./models/post');
 AV.Cloud.define('sendMail', async (request, response) => {
     let posts = await Post.getYesterdayPost();
     let today = moment().format('YYYY-MM-DD');
-    let html = nunjucks.render('daily', {
+    let html = nunjucks.render('views/daily.html', {
         date: today,
         posts: posts
     });
