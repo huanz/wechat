@@ -1,3 +1,4 @@
+const fs = require('fs');
 const AV = require('leanengine');
 const moment = require('moment');
 const nunjucks = require('nunjucks');
@@ -5,7 +6,7 @@ const nunjucks = require('nunjucks');
 const Utils = require('./utils/utils');
 const Post = require('./models/post');
 
-const Template = nunjucks.compile('./views/daily.html');
+const Template = nunjucks.compile(fs.readFileSync('./views/daily.html').toString());
 
 /**
  * 发送邮件
