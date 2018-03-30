@@ -1,3 +1,6 @@
+const nodemailer = require('nodemailer');
+const Config = require('../models/config');
+
 /**
  * extracting a list of property values
  *
@@ -21,7 +24,7 @@ const pluck = (arr, key, leanCloud) => {
 };
 
 /**
- * normalize host from www.w3cboy.com to w3cboy.com
+ * normalize host from www.noonme.com to noonme.com
  *
  * @param {String} host
  * @returns {String} host
@@ -43,3 +46,30 @@ const isObjectId = (id) => {
 exports.pluck = pluck;
 exports.normalizeHost = normalizeHost;
 exports.isObjectId = isObjectId;
+
+/**
+ * @desc 发送邮件
+ */
+exports.sendMail = async (html, subject = 'Mars Daily') => {
+    const conf = await Config.get();
+    return new Promise((resolve, reject) => {
+        let transporter = nodemailer.createTransport({
+            host: conf.mail.host,
+            secureConnection: true, // use SSL
+            port: 465,
+            secure: true, // secure:true for port 465, secure:false for port 587
+            auth: {
+                user: conf.mail.user,
+                pass: conf.mail.pass
+            }
+        });
+        transporter.sendMail({
+            from: `"Mars" <${conf.mail.user}>`,
+            to: conf.subscriber.join(','),
+            subject: subject,
+            html: html
+        }, (error, info) => {
+            error ? reject(error) : resolve(info);
+        });
+    });
+};

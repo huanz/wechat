@@ -2,7 +2,6 @@
  * 文章提取规则
  */
 const AV = require('leanengine');
-const Rule = AV.Object.extend('Rule');
 
 const utils = require('../utils/utils');
 /**
@@ -12,6 +11,7 @@ const utils = require('../utils/utils');
  * @returns {Promise}
  */
 exports.insert = (data) => {
+    const Rule = AV.Object.extend('Rule');
     let r = new Rule();
     Object.keys(data).forEach(key => r.set(key, data[key]));
     return r.save();

@@ -2,8 +2,6 @@
  * 文章
  */
 const AV = require('leanengine');
-const Post = AV.Object.extend('Post');
-
 const utils = require('../utils/utils');
 
 /**
@@ -13,6 +11,7 @@ const utils = require('../utils/utils');
  * @returns {Promise}
  */
 exports.insert = (data) => {
+    const Post = AV.Object.extend('Post');
     let article = new Post();
     Object.keys(data).forEach(key => article.set(key, data[key]));
     article.set('view', 0);
@@ -65,5 +64,15 @@ exports.getWeekPost = (limit) => {
     if (limit) {
         query.limit(limit);
     }
+    return query.find().then(results => utils.pluck(results, 'attributes'));
+};
+
+/**
+ * @desc 获取昨天文章
+ */
+exports.getYesterdayPost = () => {
+    let query = new AV.Query('Post');
+    let yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    query.greaterThanOrEqualTo('createdAt', yesterday);
     return query.find().then(results => utils.pluck(results, 'attributes'));
 };
