@@ -5,13 +5,15 @@ const nunjucks = require('nunjucks');
 const Utils = require('./utils/utils');
 const Post = require('./models/post');
 
+const Template = nunjucks.compile('./views/daily.html');
+
 /**
  * 发送邮件
  */
 AV.Cloud.define('sendMail', async (request, response) => {
     let posts = await Post.getYesterdayPost();
     let today = moment().format('YYYY-MM-DD');
-    let html = nunjucks.render('views/daily.html', {
+    let html = Template.render({
         date: today,
         posts: posts
     });
