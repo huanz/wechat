@@ -8,18 +8,12 @@ const parser = require('../utils/parser');
 const mp = require('../utils/mp');
 const urlParttern = /^https?:\/\/[^\s\.]+\.\S{2}\S*$/i;
 
-module.exports = wechat(Config.wechat).text((message, req, res, next) => {
+module.exports = wechat(Config.wechat).text(async (message, req, res, next) => {
     let input = (message.Content || '').trim();
-    if (input === '邮件' && message.FromUserName === 'osl8HwPBTCsVbquNsnYbUfOQH8sM') {
-        AV.Cloud.run('sendMail');
-    } else if (input === '推送' && message.FromUserName === 'osl8HwPBTCsVbquNsnYbUfOQH8sM') {
-        mp.push(res, message.FromUserName);
-    } else if (urlParttern.test(input)) {
-        let error = (e) => {
-            console.log(e);
-            res.reply('出错啦，木有推荐成功啊');
-        };
-        Post.getByUrl(input).then(p => {
+    // 链接
+    if (urlParttern.test(input)) {
+        try {
+            let p = await Post.getByUrl(input);
             if (p && p.status) {
                 res.reply([{
                     title: p.title,
@@ -29,39 +23,52 @@ module.exports = wechat(Config.wechat).text((message, req, res, next) => {
                 }]);
             } else {
                 let parsed = url.parse(input);
-                Promise.all([parser.get(input), Rule.getByHost(parsed.host)]).then(results => {
-                    let r = results[1];
-                    let result = {
-                        url: input,
-                        weixin: message
-                    };
-                    if (r && r.length) {
-                        let curRule = r[0];
-                        if (r.length > 1) {
-                            r.some((element) => {
-                                if (element.path && parsed.path && new RegExp(element.path).test(parsed.path)) {
-                                    curRule = element;
-                                    return true;
-                                }
-                            });
-                        }
-                        Object.assign(result, parser.rule(results[0], curRule, input));
-                    } else if (!p) {
-                        Object.assign(result, parser.html(results[0]));
+                let result = {
+                    url: input,
+                    weixin: message
+                };
+                // 获取解析规则
+                let parseRule = await Rule.getByHost(parsed.host);
+                let postRule = null;
+                if (parseRule && parseRule.length) {
+                    let postRule = parseRule[0];
+                    if (parseRule.length > 1) {
+                        parseRule.some((element) => {
+                            if (element.path && parsed.path && new RegExp(element.path).test(parsed.path)) {
+                                postRule = element;
+                                return true;
+                            }
+                        });
                     }
-                    if (!p || !p.status) {
-                        Post.insert(result).then(() => {
-                            res.reply([{
-                                title: result.title,
-                                description: result.description,
-                                picurl: result.thumb,
-                                url: input
-                            }]);
-                        }).catch(error);
-                    }
-                }).catch(error);
+                }
+                let output = await parser.newParser(input, postRule);
+                Object.assign(result, output);
+                if (!p || !p.status) {
+                    let ret = await Post.insert(result);
+                    res.reply([{
+                        title: result.title,
+                        description: result.description,
+                        picurl: result.thumb,
+                        url: input
+                    }]);
+                }
             }
-        }).catch(error);
+        } catch (error) {
+            console.log(error);
+            res.reply('出错啦，木有推荐成功啊');
+        }
+    } else if (message.FromUserName === 'osl8HwPBTCsVbquNsnYbUfOQH8sM') {
+        switch(input) {
+            case '发邮件':
+                AV.Cloud.run('sendMail');
+                break;
+            case '群发':
+                mp.push(res, message.FromUserName);
+                break;
+            default:
+                res.reply('直接发送文章链接即可推荐文章给我哦~~~');
+                break;
+        }
     } else {
         res.reply('直接发送文章链接即可推荐文章给我哦~~~');
     }

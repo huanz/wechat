@@ -18,7 +18,9 @@ exports.insert = (data) => {
     if (!data.status) {
         article.set('status', 0);
     }
-    return article.save();
+    return article.save(null, {
+        query: new AV.Query(Post).notEqualTo('url', data.url),
+    });
 };
 
 /**

@@ -17,8 +17,8 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "1.18.2",
-    "cheerio": "^1.0.0-rc.2",
     "connect-timeout": "^1.9.0",
     "express": "4.16.3",
     "leancloud-storage": "^3.6.4",
@@ -27,7 +27,7 @@
     "morgan": "^1.9.0",
     "nodemailer": "^4.6.3",
     "nunjucks": "^3.1.2",
-    "request": "^2.85.0",
+    "puppeteer": "^1.2.0",
     "striptags": "^3.1.1",
     "turndown": "^4.0.1",
     "turndown-plugin-gfm": "^1.0.1",

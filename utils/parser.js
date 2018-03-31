@@ -1,141 +1,67 @@
+const fs = require('fs');
 const url = require('url');
-const cheerio = require('cheerio');
+const axios = require('axios');
 const striptags = require('striptags');
 const turndown = require('turndown');
 const turndownPluginGfm = require('turndown-plugin-gfm');
-const fetch = require('./fetch');
+const Rule = require('../models/rule');
+const Config = require('../models/config');
+const Pup = require('./pup');
 
 const turndownService = new turndown();
 turndownService.use(turndownPluginGfm.gfm);
 
-const imgSource = ($el) => {
-    return $el.attr('src') || $el.attr('data-src');
-};
-
-/**
- * @desc 链接路径处理
- */
-const parserLink = (html, link) => {
-    let $ = html.cheerio ? html : cheerio.load(html, {
-        decodeEntities: false
-    });
-    let elementAttr = {
-        a: 'href',
-        img: 'src',
-        iframe: 'src'
-    };
-    Object.keys(elementAttr).forEach(element => {
-        $(element).each(function () {
-            let $this = $(this);
-            let attr = elementAttr[element];
-            let value = attr === 'src' ? imgSource($this) : $this.attr(attr);
-            if (value) {
-                $this.attr(attr, url.resolve(link, value));
-                if (element === 'iframe') {
-                    let urlParams = new url.URLSearchParams(value);
-                    let width = urlParams.get('width') || '100%';
-                    let height = urlParams.get('height') || 'auto';
-                    $this.attr('style', 'dispaly:block;max-width:100%;');
-                    $this.attr('width', width);
-                    $this.attr('height', height);
-                }
-            }
-        });
-    });
-    return $;
-};
-
-const parserHtml = (html, options) => {
-    let result = {};
-    let $ = cheerio.load(html, {
-        decodeEntities: false
-    });
-    let opts = Object.assign({
-        title: true,
-        thumb: true,
-        description: true
-    }, options);
-
-    if (opts.title) {
-        result.title = $('title').text();
-    }
-
-    if (opts.description && $('meta[name="description"]').length) {
-        result.description = $('meta[name="description"]').attr('content');
-    }
-    if (!$('meta[name="viewport"]').length) {
-        $('head').append('<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">');
-    }
-
-    parserLink($, opts.url);
-
-    result.html = $.html();
-
-    if (opts.thumb) {
-        $('img').each(() => {
-            let src = imgSource($(this));
-            if (src) {
-                result.thumb = url.resolve(opts.url, src);
-                return false;
-            }
-        });
-    }
-    return result;
-};
-
-const parserUrl = (link, options) => {
-    return getHtml(link).then(html => {
-        options = options || {};
-        options.url = link;
-        return parserHtml(html, options);
-    });
-};
-
-const getHtml = (link) => {
-    return fetch(link).then(res => {
-        let value = res.headers['content-type'];
-        if (value.indexOf('text/html') > -1) {
-            return res.body;
-        } else {
-            return Promise.reject('response not html');
-        }
-    });
-};
-
-const parserRule = (html, rule, link) => {
-    let $ = parserLink(html, link);
-    let result = {
-        status: 1,
-        title: eval(rule.title),
-        html: eval(rule.html),
-        description: (rule.description && eval(rule.description)) || ''
-    };
-    if (result.title) {
-        result.title = result.title.trim();
-    }
-    try {
-        result.thumb = eval(rule.thumb);
-    } catch (error) {
-        console.log(error, rule.thumb);
-    }
-    if (!result.description) {
-        result.description = striptags(result.html).replace(/\s/g, '').substr(0, 256);
-    }
-    if (result.thumb && result.thumb.startsWith('//')) {
-        result.thumb = 'https:' + result.thumb;
-    }
-    return result;
-};
-
 /**
  * @desc html转markdown
  */
-const html2md = (html) => {
+exports.html2md = (html) => {
     return turndownService.turndown(html);
 };
 
-exports.html = parserHtml;
-exports.url = parserUrl;
-exports.rule = parserRule;
-exports.get = getHtml;
-exports.html2md = html2md;
+exports.newParser = async (postUrl, parseRule) => {
+    const pup = new Pup();
+    if (parseRule) {
+        await pup.start(postUrl);
+        let inject = `JSON.stringify({title: ${parseRule.title}, html: ${parseRule.html}`;
+        if (parseRule.description) {
+            inject += `, description: ${parseRule.description}`;
+        }
+        if (parseRule.thumb) {
+            inject += `, thumb: ${parseRule.thumb} || __findImage()`;
+        }
+        inject += '})';
+        const retString = await pup.page.evaluate(inject);
+        pup.close();
+        
+        const retObj = JSON.parse(retString);
+        if (retObj.title) {
+            retObj.title = retObj.title.trim();
+        }
+        if (retObj.html) {
+            retObj.html = retObj.html.trim();
+        }
+        if (!retObj.description) {
+            retObj.description = striptags(retObj.html).replace(/\s/g, '').substr(0, 256);
+        }
+        return retObj;
+    } else {
+        try {
+            const conf = await Config.get();
+            const mercury = await axios.get(`https://mercury.postlight.com/parser?url=${postUrl}`, {
+                headers: {
+                    'x-api-key': conf.mercury
+                }
+            }).then(res => res.data);
+            return {
+                title: mercury.title,
+                html: mercury.content,
+                thumb: mercury.lead_image_url,
+                description: mercury.excerpt
+            };
+        } catch (error) {
+            await pup.start(postUrl);
+            const result = await pup.getData();
+            return result;
+        }
+    }
+};
