@@ -11,7 +11,7 @@ const Template = nunjucks.compile(fs.readFileSync('./views/daily.html').toString
 /**
  * 发送邮件
  */
-AV.Cloud.define('sendMail', async (request, response) => {
+AV.Cloud.define('sendMail', async () => {
     let posts = await Post.getYesterdayPost();
     let today = moment().format('YYYY-MM-DD');
     let html = Template.render({

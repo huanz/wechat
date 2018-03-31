@@ -1,6 +1,7 @@
 'use strict';
 const url = require('url');
 const wechat = require('wechat');
+const AV = require('leanengine');
 const Post = require('../models/post');
 const Rule = require('../models/rule');
 const parser = require('../utils/parser');
@@ -9,7 +10,9 @@ const urlParttern = /^https?:\/\/[^\s\.]+\.\S{2}\S*$/i;
 
 module.exports = wechat(Config.wechat).text((message, req, res, next) => {
     let input = (message.Content || '').trim();
-    if (input === '推送' && message.FromUserName === 'osl8HwPBTCsVbquNsnYbUfOQH8sM') {
+    if (input === '邮件' && message.FromUserName === 'osl8HwPBTCsVbquNsnYbUfOQH8sM') {
+        AV.Cloud.run('sendMail');
+    } else if (input === '推送' && message.FromUserName === 'osl8HwPBTCsVbquNsnYbUfOQH8sM') {
         mp.push(res, message.FromUserName);
     } else if (urlParttern.test(input)) {
         let error = (e) => {

@@ -2,8 +2,8 @@
  * 文章
  */
 const AV = require('leanengine');
+const moment = require('moment');
 const utils = require('../utils/utils');
-
 /**
  * 插入一篇文章
  *
@@ -72,7 +72,7 @@ exports.getWeekPost = (limit) => {
  */
 exports.getYesterdayPost = () => {
     let query = new AV.Query('Post');
-    let yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    let yesterday = moment().subtract(1, 'days').startOf('day').toDate();
     query.greaterThanOrEqualTo('createdAt', yesterday);
     return query.find().then(results => utils.pluck(results, 'attributes'));
 };
