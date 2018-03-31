@@ -5,7 +5,7 @@ module.exports = class Pup {
         
     }
     async start(url) {
-        const browser = this.browser = await puppeteer.launch();
+        const browser = this.browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
         const page = this.page = await browser.newPage();
         await page.goto(url);
         // await page.waitFor(5000);
