@@ -58,7 +58,8 @@ exports.newParser = async (postUrl, parseRule) => {
                 thumb: mercury.lead_image_url,
                 description: mercury.excerpt
             };
-        } catch (error) {
+        } catch (e) {
+            console.log(e);
             await pup.start(postUrl);
             const result = await pup.getData();
             return result;
