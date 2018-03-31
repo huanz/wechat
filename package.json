@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "gulp"
+    "dev": "gulp",
+    "build-dev": "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD"
   },
   "keywords": [
     "node",
