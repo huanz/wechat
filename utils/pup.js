@@ -8,7 +8,7 @@ module.exports = class Pup {
         const browser = this.browser = await puppeteer.launch();
         const page = this.page = await browser.newPage();
         await page.goto(url);
-        await page.waitFor(5000);
+        // await page.waitFor(5000);
         await page.evaluate(fs.readFileSync('./utils/jquery-3.3.1.min.js', 'utf8'));
         // 修正链接问题
         await page.evaluate(() => {
