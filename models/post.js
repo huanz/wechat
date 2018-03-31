@@ -20,6 +20,7 @@ exports.insert = (data) => {
     }
     return article.save(null, {
         query: new AV.Query(Post).notEqualTo('url', data.url),
+        fetch: true
     });
 };
 
