@@ -31,7 +31,7 @@ module.exports = wechat(Config.wechat).text(async (message, req, res, next) => {
                 let parseRule = await Rule.getByHost(parsed.host);
                 let postRule = null;
                 if (parseRule && parseRule.length) {
-                    let postRule = parseRule[0];
+                    postRule = parseRule[0];
                     if (parseRule.length > 1) {
                         parseRule.some((element) => {
                             if (element.path && parsed.path && new RegExp(element.path).test(parsed.path)) {
