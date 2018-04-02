@@ -11,7 +11,7 @@ module.exports = class Crawler {
     }
     async start(url) {
         if (this.type === 0) {
-            this.nightmare = Promise.resolve(new nightmare().goto(url).inject('js', './jquery-3.3.1.min.js').evaluate(this._injects));
+            this.nightmare = new nightmare().goto(url).inject('js', './jquery-3.3.1.min.js').evaluate(this._injects);
         } else {
             let browser = this.browser = await puppeteer.launch();
             let page = this.page = await browser.newPage();
