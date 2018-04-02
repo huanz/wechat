@@ -4,9 +4,9 @@
   "description": "a weChat official account push server",
   "main": "server.js",
   "scripts": {
-    "preinstall": "export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/",
     "start": "node server.js",
-    "dev": "gulp"
+    "dev": "gulp",
+    "postinstall": "ELECTRON_MIRROR=\"https://npm.taobao.org/mirrors/electron/\" npm install nightmare"
   },
   "keywords": [
     "node",
@@ -26,10 +26,9 @@
     "leanengine": "^3.1.0",
     "moment": "^2.22.0",
     "morgan": "^1.9.0",
-    "nightmare": "^3.0.1",
     "nodemailer": "^4.6.4",
     "nunjucks": "^3.1.2",
-    "puppeteer": "^1.2.0",
+    "puppeteer-cn": "^0.1.7",
     "striptags": "^3.1.1",
     "turndown": "^4.0.1",
     "turndown-plugin-gfm": "^1.0.1",
