@@ -6,7 +6,7 @@ const turndown = require('turndown');
 const turndownPluginGfm = require('turndown-plugin-gfm');
 const Rule = require('../models/rule');
 const Config = require('../models/config');
-const Pup = require('./pup');
+const Crawler = require('./crawler');
 
 const turndownService = new turndown();
 turndownService.use(turndownPluginGfm.gfm);
@@ -19,21 +19,20 @@ exports.html2md = (html) => {
 };
 
 exports.newParser = async (postUrl, parseRule) => {
-    const pup = new Pup();
+    const crawler = new Crawler();
     if (parseRule) {
-        await pup.start(postUrl);
-        let inject = `JSON.stringify({title: ${parseRule.title}, html: ${parseRule.html}`;
+        await crawler.start(postUrl);
+
+        let inject = `{title: ${parseRule.title}, html: ${parseRule.html}`;
         if (parseRule.description) {
             inject += `, description: ${parseRule.description}`;
         }
         if (parseRule.thumb) {
             inject += `, thumb: ${parseRule.thumb} || __findImage()`;
         }
-        inject += '})';
-        const retString = await pup.page.evaluate(inject);
-        pup.close();
-        
-        const retObj = JSON.parse(retString);
+        inject += '}';
+
+        const retObj = await crawler.evaluate(new Function(`return (${inject})`));
         if (retObj.title) {
             retObj.title = retObj.title.trim();
         }
@@ -60,8 +59,8 @@ exports.newParser = async (postUrl, parseRule) => {
             };
         } catch (e) {
             console.log(e);
-            await pup.start(postUrl);
-            const result = await pup.getData();
+            await crawler.start(postUrl);
+            const result = await crawler.getData();
             return result;
         }
     }

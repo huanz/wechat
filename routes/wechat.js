@@ -43,6 +43,7 @@ module.exports = wechat(Config.wechat).text(async (message, req, res, next) => {
                 }
                 let output = await parser.newParser(input, postRule);
                 Object.assign(result, output);
+                result.md = parser.html2md(result.html);
                 if (!p || !p.status) {
                     let ret = await Post.insert(result);
                     res.reply([{

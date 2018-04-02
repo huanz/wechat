@@ -26,6 +26,7 @@
     "leanengine": "^3.1.0",
     "moment": "^2.22.0",
     "morgan": "^1.9.0",
+    "nightmare": "^3.0.1",
     "nodemailer": "^4.6.4",
     "nunjucks": "^3.1.2",
     "puppeteer": "^1.2.0",
