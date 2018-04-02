@@ -1,4 +1,4 @@
-const puppeteer = require('puppeteer-cn');
+const puppeteer = require('puppeteer');
 const nightmare = require('nightmare');
 
 module.exports = class Crawler {

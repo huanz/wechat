@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "gulp",
+    "install": "puppeteer_download_host=\"https://npm.taobao.org/mirrors\" npm install puppeteer",
     "postinstall": "ELECTRON_MIRROR=\"https://npm.taobao.org/mirrors/electron/\" npm install nightmare"
   },
   "keywords": [
@@ -28,7 +29,6 @@
     "morgan": "^1.9.0",
     "nodemailer": "^4.6.4",
     "nunjucks": "^3.1.2",
-    "puppeteer-cn": "^0.1.7",
     "striptags": "^3.1.1",
     "turndown": "^4.0.1",
     "turndown-plugin-gfm": "^1.0.1",
