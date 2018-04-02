@@ -19,7 +19,7 @@ exports.html2md = (html) => {
 };
 
 exports.newParser = async (postUrl, parseRule) => {
-    const crawler = new Crawler();
+    const crawler = new Crawler(1);
     if (parseRule) {
         await crawler.start(postUrl);
 
