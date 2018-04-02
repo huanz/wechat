@@ -21,7 +21,9 @@ exports.html2md = (html) => {
 exports.newParser = async (postUrl, parseRule) => {
     const crawler = new Crawler();
     if (parseRule) {
+        console.log('start');
         await crawler.start(postUrl);
+        console.log('start--end');
 
         let inject = `{title: ${parseRule.title}, html: ${parseRule.html}`;
         if (parseRule.description) {
@@ -32,6 +34,7 @@ exports.newParser = async (postUrl, parseRule) => {
         }
         inject += '}';
 
+        console.log('evaluate-->>>');
         const retObj = await crawler.evaluate(new Function(`return (${inject})`));
         console.log(retObj);
         if (retObj.title) {
