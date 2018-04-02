@@ -10,17 +10,30 @@ module.exports = class Crawler {
         this.type = type;
     }
     async start(url) {
+        let _injectjs = './utils/jquery-3.3.1.min.js';
+        let _injects = function() {
+            ['href', 'src'].forEach(attr => {
+                $(`[${attr}]`).each(function () {
+                    $(this).attr(attr, this[attr]);
+                });
+            });
+            window.__findImage = function () {
+                return window.$('img').filter(function () {
+                    return $(this).width() >= 50 && $(this).height() >= 50;
+                }).eq(0).attr('src');
+            };
+        };
         if (this.type === 0) {
-            this.nightmare = new nightmare().goto(url).inject('js', './jquery-3.3.1.min.js').evaluate(this._injects);
+            this.nightmare = new nightmare().goto(url).inject('js', _injectjs).evaluate(_injects);
         } else {
             let browser = this.browser = await puppeteer.launch();
             let page = this.page = await browser.newPage();
             await page.goto(url);
             // await page.waitFor(5000);
-            await page.evaluate(fs.readFileSync('./utils/jquery-3.3.1.min.js', 'utf8'));
-            await page.evaluate(this._injects);
+            await page.evaluate(fs.readFileSync(_injectjs, 'utf8'));
+            await page.evaluate(_injects);
         }
-        return Promise.resolve(this);
+        return this;
     }
     evaluate(...args) {
         if (this.nightmare) {
@@ -44,18 +57,5 @@ module.exports = class Crawler {
     }
     close() {
         return this.browser && this.browser.close();
-    }
-    
-    _injects() {
-        ['href', 'src'].forEach(attr => {
-            $(`[${attr}]`).each(function () {
-                $(this).attr(attr, this[attr]);
-            });
-        });
-        window.__findImage = function () {
-            return window.$('img').filter(function () {
-                return $(this).width() >= 50 && $(this).height() >= 50;
-            }).eq(0).attr('src');
-        };
     }
 }

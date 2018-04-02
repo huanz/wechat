@@ -36,6 +36,7 @@ exports.newParser = async (postUrl, parseRule) => {
 
         console.log('evaluate-->>>');
         const retObj = await crawler.evaluate(new Function(`return (${inject})`));
+        console.log('evaluate-->>>end-----');
         console.log(retObj);
         if (retObj.title) {
             retObj.title = retObj.title.trim();
