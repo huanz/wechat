@@ -20,7 +20,7 @@ module.exports = class Crawler {
             await page.evaluate(fs.readFileSync('./utils/jquery-3.3.1.min.js', 'utf8'));
             await page.evaluate(this._injects);
         }
-        return this;
+        return Promise.resolve(this);
     }
     evaluate(...args) {
         if (this.nightmare) {
