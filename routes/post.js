@@ -29,11 +29,7 @@ router.get('/', async (req, res) => {
         let title = req.body.title;
         let thumb = req.body.thumb;
         let description = req.body.description;
-        let result = await parser.url(url, {
-            title: !title,
-            thumb: !thumb,
-            description: !description
-        });
+        let result = await parser.newParser(url);
         result.title = title || result.title;
         result.thumb = thumb || result.thumb;
         result.description = description || result.description;
