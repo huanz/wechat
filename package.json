@@ -4,9 +4,9 @@
   "description": "a weChat official account push server",
   "main": "server.js",
   "scripts": {
+    "preinstall": "export ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/",
     "start": "node server.js",
-    "dev": "gulp",
-    "build-dev": "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD"
+    "dev": "gulp"
   },
   "keywords": [
     "node",
