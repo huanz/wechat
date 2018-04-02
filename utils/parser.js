@@ -19,7 +19,7 @@ exports.html2md = (html) => {
 };
 
 exports.newParser = async (postUrl, parseRule) => {
-    const crawler = new Crawler(1);
+    const crawler = new Crawler();
     if (parseRule) {
         await crawler.start(postUrl);
 
@@ -33,6 +33,7 @@ exports.newParser = async (postUrl, parseRule) => {
         inject += '}';
 
         const retObj = await crawler.evaluate(new Function(`return (${inject})`));
+        console.log(retObj);
         if (retObj.title) {
             retObj.title = retObj.title.trim();
         }
