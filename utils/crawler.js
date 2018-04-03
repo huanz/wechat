@@ -1,5 +1,5 @@
-const puppeteer = require('puppeteer');
-const nightmare = require('nightmare');
+// const puppeteer = require('puppeteer');
+// const nightmare = require('nightmare');
 
 module.exports = class Crawler {
     /**

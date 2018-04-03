@@ -5,9 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "gulp",
-    "install": "puppeteer_download_host=\"https://npm.taobao.org/mirrors\" npm install puppeteer",
-    "postinstall": "ELECTRON_MIRROR=\"https://npm.taobao.org/mirrors/electron/\" npm install nightmare"
+    "dev": "gulp"
   },
   "keywords": [
     "node",
