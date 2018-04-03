@@ -79,3 +79,13 @@ exports.getYesterdayPost = () => {
     query.greaterThanOrEqualTo('createdAt', yesterday);
     return query.find().then(results => utils.pluck(results, 'attributes'));
 };
+
+/**
+ * @desc 分页获取文章
+ */
+exports.getByPage = (page = 1, limit = 15) => {
+    let query = new AV.Query('Post');
+    query.skip(((page - 1) || 0) * limit);
+    query.limit(limit);
+    return query.find().then(results => utils.pluck(results, 'attributes'));
+};
