@@ -4,6 +4,12 @@
 const AV = require('leanengine');
 const moment = require('moment');
 const utils = require('../utils/utils');
+
+function pickId(obj) {
+    let ret = Object.assign({id: obj.id}, obj.toJSON());
+    ret.weixin = null;
+    return ret;
+}
 /**
  * 插入一篇文章
  *
@@ -37,7 +43,7 @@ exports.list = () => {
 
 exports.getById = (id) => {
     let query = new AV.Query('Post');
-    return query.get(id).then(result => result.toJSON());
+    return query.get(id).then(result => pickId(result));
 };
 
 exports.getByUrl = (url) => {
@@ -45,7 +51,7 @@ exports.getByUrl = (url) => {
     query.equalTo('url', url);
     return query.find().then(results => {
         if (results && results.length) {
-            return results[0].toJSON();
+            return pickId(results[0]);
         } else {
             return undefined;
         }
@@ -86,5 +92,5 @@ exports.getByPage = (page = 1, limit = 15) => {
     query.skip(((page - 1) || 0) * limit);
     query.limit(limit);
     query.descending('createdAt');
-    return query.find().then(results => results.map(res => res.toJSON()));
+    return query.find().then(results => results.map(res => pickId(res)));
 };
