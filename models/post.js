@@ -64,6 +64,7 @@ exports.getWeekPost = (limit) => {
     let lastWeek = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     query.greaterThanOrEqualTo('createdAt', lastWeek);
     query.exists('thumb');
+    query.descending('createdAt');
     if (limit) {
         query.limit(limit);
     }
@@ -77,6 +78,7 @@ exports.getYesterdayPost = () => {
     let query = new AV.Query('Post');
     let yesterday = moment().subtract(1, 'days').startOf('day').toDate();
     query.greaterThanOrEqualTo('createdAt', yesterday);
+    query.descending('createdAt');
     return query.find().then(results => utils.pluck(results, 'attributes'));
 };
 
@@ -87,5 +89,6 @@ exports.getByPage = (page = 1, limit = 15) => {
     let query = new AV.Query('Post');
     query.skip(((page - 1) || 0) * limit);
     query.limit(limit);
-    return query.find().then(results => utils.pluck(results, 'attributes'));
+    query.descending('createdAt');
+    return query.find().then(results => utils.pluck(results, 'attributes', true));
 };

@@ -7,7 +7,7 @@ router
         let posts = await Post.getByPage(req.query.page, req.query.limit);
         res.json(posts);
     })
-    .get('post/:id', async (req, res) => {
+    .get('/post/:id', async (req, res) => {
         let post = await Post.getById(req.params.id);
         res.json(post);
     });
