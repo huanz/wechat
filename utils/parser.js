@@ -100,6 +100,13 @@ exports.htmlParser = async (postUrl, parseRule, options = {}) => {
             }
             result.html = $.html();
         }
+
+        // trim
+        for (let k in result) {
+            if (result[k] && typeof result[k] === 'string') {
+                result[k] = result[k].trim();
+            }
+        }
         
         return result;
     } else {
