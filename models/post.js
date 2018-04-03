@@ -37,11 +37,7 @@ exports.list = () => {
 
 exports.getById = (id) => {
     let query = new AV.Query('Post');
-    return query.get(id).then(result => {
-        if (result) {
-            return result.attributes;
-        }
-    });
+    return query.get(id).then(result => result.toJSON());
 };
 
 exports.getByUrl = (url) => {
@@ -49,7 +45,7 @@ exports.getByUrl = (url) => {
     query.equalTo('url', url);
     return query.find().then(results => {
         if (results && results.length) {
-            return results[0].attributes;
+            return results[0].toJSON();
         } else {
             return undefined;
         }
@@ -90,5 +86,5 @@ exports.getByPage = (page = 1, limit = 15) => {
     query.skip(((page - 1) || 0) * limit);
     query.limit(limit);
     query.descending('createdAt');
-    return query.find().then(results => utils.pluck(results, 'attributes', true));
+    return query.find().then(results => results.map(res => res.toJSON()));
 };
