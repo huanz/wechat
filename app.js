@@ -5,6 +5,7 @@ const timeout = require('connect-timeout');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const nunjucks = require('nunjucks');
+const cors = require('cors');
 const AV = require('leanengine');
 // 加载云函数定义
 require('./cloud');
@@ -66,7 +67,7 @@ app.get('/', (req, res) => {
 app.use('/post', post);
 app.use('/wechat', wechat);
 app.use('/rule', rule);
-app.use('/api', api);
+app.use('/api', cors(), api);
 
 app.use((req, res, next) => {
     if (!res.headersSent) {
