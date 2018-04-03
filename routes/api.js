@@ -16,11 +16,11 @@ function success(res, data) {
 router
     .get('/post', async (req, res, next) => {
         let posts = await Post.getByPage(req.query.page, req.query.limit);
-        success(posts);
+        success(res, posts);
     })
     .get('/post/:id', async (req, res) => {
         let post = await Post.getById(req.params.id);
-        success(post);
+        success(res, post);
     });
 
 module.exports = router;
