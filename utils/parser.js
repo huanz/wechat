@@ -24,7 +24,7 @@ function dataSource ($el) {
 }
 
 function fixLink ($, link) {
-    ['href', 'src'].each(attr => {
+    ['href', 'src'].forEach(attr => {
         $(`[${attr}]`).each(function () {
             let $this = $(this);
             let val = attr === 'src' ? dataSource($this) : $this.attr(attr);
