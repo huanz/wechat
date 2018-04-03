@@ -24,7 +24,7 @@ function dataSource ($el) {
 }
 
 function fixLink ($, link) {
-    ['href', 'src'].forEach(attr => {
+    ['href', 'src'].forEach((attr) => {
         $(`[${attr}]`).each(function () {
             let $this = $(this);
             let val = attr === 'src' ? dataSource($this) : $this.attr(attr);
@@ -56,33 +56,31 @@ exports.htmlParser = async (postUrl, parseRule, options = {}) => {
         let result = Object.assign({}, options);
 
         if (parseRule) {
-            if (!result.title && parseRule.title) {
-                result.title = eval(parseRule.title);
-            }
-            if (!result.description) {
-                result.description = parseRule.description ? eval(rule.description) : striptags(result.html).replace(/\s/g, '').substr(0, 256);
-            }
-            if (!result.html && parseRule.html) {
-                result.html = eval(parseRule.html);
-            }
-            if (!result.thumb && parseRule.thumb) {
-                result.thumb = eval(parseRule.thumb);
-            }
+            ['title', 'description', 'html', 'thumb'].forEach((key) => {
+                if (!result[key] && parseRule[key]) {
+                    try {
+                        result[key] = eval(parseRule[key]);
+                    } catch (error) {}
+                }
+            });
         } else {
             try {
                 let ret = await mercuryParser(postUrl);
                 Object.assign(ret, result);
                 result = ret;
-            } catch (error) {
-            }
+            } catch (error) {}
         }
 
         if (!result.title) {
             result.title = $('title').text();
         }
 
-        if (!result.description && $('meta[name="description"]').length) {
-            result.description = $('meta[name="description"]').attr('content');
+        if (!result.description) {
+            if (result.html) {
+                result.description = striptags(result.html).replace(/\s/g, '').substr(0, 256);
+            } else if ($('meta[name="description"]').length) {
+                result.description = $('meta[name="description"]').attr('content');
+            }
         }
 
         if (!result.thumb) {
