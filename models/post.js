@@ -87,10 +87,19 @@ exports.getYesterdayPost = () => {
 /**
  * @desc 分页获取文章
  */
-exports.getByPage = (page = 1, limit = 15) => {
+exports.getByPage = async (page = 1, limit = 15) => {
     let query = new AV.Query('Post');
     query.skip(((page - 1) || 0) * limit);
     query.limit(limit);
     query.descending('createdAt');
-    return query.find().then(results => results.map(res => pickId(res)));
+
+    let res = await Promise.all([query.find(), query.count()]);
+
+    return {
+        list: res[0].map(res => pickId(res)),
+        total: res[1],
+        limit: limit,
+        page: page,
+        totalPage: Math.ceil(res[1] / limit)
+    };
 };
