@@ -1,6 +1,7 @@
 const fs = require('fs');
 const url = require('url');
 const axios = require('axios');
+const cheerio = require('cheerio');
 const striptags = require('striptags');
 const turndown = require('turndown');
 const turndownPluginGfm = require('turndown-plugin-gfm');
@@ -17,6 +18,111 @@ turndownService.use(turndownPluginGfm.gfm);
 exports.html2md = (html) => {
     return turndownService.turndown(html);
 };
+
+function dataSource ($el) {
+    return $el.attr('src') || $el.attr('data-src');
+}
+
+function fixLink ($, link) {
+    ['href', 'src'].each(attr => {
+        $(`[${attr}]`).each(function () {
+            let $this = $(this);
+            let val = attr === 'src' ? dataSource($this) : $this.attr(attr);
+            if (val) {
+                $this.attr(attr, url.resolve(link, val));
+                if ($this.get(0).tagName === 'iframe') {
+                    let urlParams = new url.URLSearchParams(val);
+                    let width = urlParams.get('width') || '100%';
+                    let height = urlParams.get('height') || 'auto';
+                    $this.attr('style', 'dispaly:block;max-width:100%;');
+                    $this.attr('width', width);
+                    $this.attr('height', height);
+                }
+            }
+        });
+    });
+}
+
+exports.htmlParser = async (postUrl, parseRule, options = {}) => {
+    const response = await axios.get(postUrl);
+    const contentType = response.headers['content-type'];
+    if (contentType.indexOf('text/html') > -1) {
+        let $ = cheerio.load(response.data, {
+            decodeEntities: false
+        });
+        // 修复外链路径
+        fixLink($, postUrl);
+        
+        let result = Object.assign({}, options);
+
+        if (parseRule) {
+            if (!result.title && parseRule.title) {
+                result.title = eval(parseRule.title);
+            }
+            if (!result.description) {
+                result.description = parseRule.description ? eval(rule.description) : striptags(result.html).replace(/\s/g, '').substr(0, 256);
+            }
+            if (!result.html && parseRule.html) {
+                result.html = eval(parseRule.html);
+            }
+            if (!result.thumb && parseRule.thumb) {
+                result.thumb = eval(parseRule.thumb);
+            }
+        } else {
+            try {
+                let ret = await mercuryParser(postUrl);
+                Object.assign(ret, result);
+                result = ret;
+            } catch (error) {
+            }
+        }
+
+        if (!result.title) {
+            result.title = $('title').text();
+        }
+
+        if (!result.description && $('meta[name="description"]').length) {
+            result.description = $('meta[name="description"]').attr('content');
+        }
+
+        if (!result.thumb) {
+            $('img').each(function() {
+                let src = dataSource($(this));
+                if (src) {
+                    result.thumb = url.resolve(postUrl, src);
+                }
+            });
+        }
+
+        if (!result.html) {
+            if (!$('meta[name="viewport"]').length) {
+                $('head').append('<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">');
+            }
+            result.html = $.html();
+        }
+        
+        return result;
+    } else {
+        throw 'response not html';
+    }
+};
+
+const mercuryParser = async (postUrl) => {
+    const conf = await Config.get();
+    const mercury = await axios.get(`https://mercury.postlight.com/parser?url=${postUrl}`, {
+        headers: {
+            'x-api-key': conf.mercury
+        }
+    }).then(res => res.data);
+    return {
+        title: mercury.title,
+        html: mercury.content,
+        thumb: mercury.lead_image_url,
+        description: mercury.excerpt
+    };
+};
+
+exports.mercuryParser = mercuryParser;
 
 exports.newParser = async (postUrl, parseRule) => {
     const crawler = new Crawler();
@@ -50,18 +156,8 @@ exports.newParser = async (postUrl, parseRule) => {
         return retObj;
     } else {
         try {
-            const conf = await Config.get();
-            const mercury = await axios.get(`https://mercury.postlight.com/parser?url=${postUrl}`, {
-                headers: {
-                    'x-api-key': conf.mercury
-                }
-            }).then(res => res.data);
-            return {
-                title: mercury.title,
-                html: mercury.content,
-                thumb: mercury.lead_image_url,
-                description: mercury.excerpt
-            };
+            let res = await mercuryParser(postUrl);
+            return res;
         } catch (e) {
             console.log(e);
             await crawler.start(postUrl);

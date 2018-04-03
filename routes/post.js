@@ -26,15 +26,15 @@ router.get('/', async (req, res) => {
 }).post('/', async (req, res, next) => {
     let url = req.body.url;
     if (url) {
-        let title = req.body.title;
-        let thumb = req.body.thumb;
-        let description = req.body.description;
-        let result = await parser.newParser(url);
-        result.title = title || result.title;
-        result.thumb = thumb || result.thumb;
-        result.description = description || result.description;
+        let options = {
+            title: req.body.title,
+            thumb: req.body.thumb,
+            description: req.body.description
+        };
+        let result = await parser.htmlParser(url, null, options);
         result.url = url;
-        result.md = parser.html2md(result.html);
+        result.status = 1;
+        result.markdown = parser.html2md(result.html);
         let article = await Post.insert(result);
         res.redirect('/post');
     } else {
