@@ -16,18 +16,26 @@ function pickId(obj) {
  * @param {Object} data
  * @returns {Promise}
  */
-exports.insert = (data) => {
-    const Post = AV.Object.extend('Post');
-    let article = new Post();
-    Object.keys(data).forEach(key => article.set(key, data[key]));
-    article.set('view', 0);
-    if (!data.status) {
-        article.set('status', 0);
+exports.insert = async (data) => {
+    /**
+     * @desc 检测链接是否已存在
+     */
+    const query = new AV.Query(Post);
+    query.equalTo('url', data.url);
+    const has = await query.first();
+    
+    if (has) {
+        return has;
+    } else {
+        let Post = AV.Object.extend('Post');
+        let article = new Post();
+        Object.keys(data).forEach(key => article.set(key, data[key]));
+        article.set('view', 0);
+        if (!data.status) {
+            article.set('status', 0);
+        }
+        return article.save();
     }
-    return article.save(null, {
-        query: new AV.Query(Post).notEqualTo('url', data.url),
-        fetch: true
-    });
 };
 
 /**
