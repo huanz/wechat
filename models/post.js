@@ -20,7 +20,7 @@ exports.insert = async (data) => {
     /**
      * @desc 检测链接是否已存在
      */
-    const query = new AV.Query(Post);
+    const query = new AV.Query('Post');
     query.equalTo('url', data.url);
     const has = await query.first();
     
