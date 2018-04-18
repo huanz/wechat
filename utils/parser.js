@@ -24,12 +24,12 @@ function dataSource ($el) {
 }
 
 function fixLink ($, link) {
-    ['href', 'src'].forEach((attr) => {
+    ['href', 'src', 'data-src'].forEach((attr) => {
         $(`[${attr}]`).each(function () {
             let $this = $(this);
-            let val = attr === 'src' ? dataSource($this) : $this.attr(attr);
+            let val = $this.attr(attr);
             if (val) {
-                $this.attr(attr, url.resolve(link, val));
+                $this.attr(attr.replace('data-', ''), url.resolve(link, val));
                 if ($this.get(0).tagName === 'iframe') {
                     let urlParams = new url.URLSearchParams(val);
                     let width = urlParams.get('width') || '100%';
